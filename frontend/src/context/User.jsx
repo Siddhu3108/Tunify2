@@ -87,7 +87,7 @@ export const UserProvider = ({ children }) => {
         toast.success(data.message);
         // setUser(data.user); // Uncomment if you want to store user data
         setIsAuth(true);
-        navigate("/");
+        navigate("/home");
       } catch (error) {
         toast.error(error.response?.data?.message || "Login failed");
       }

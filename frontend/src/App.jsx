@@ -1,74 +1,47 @@
-"use client"
-
-import { useContext, useState,useEffect } from 'react'
-import SideBar from './components/SideBar/'
-import Player from './components/Player'
-import Display from './components/Display'
-import { PlayerContext } from './context/PlayerContext'
-import { useLocation } from "react-router-dom"
-import Navbar from "./components/Navbar"
-import LoginPage from "./components/LoginPage"
-import SignupPage from "./components/SignupPage"
-import { UserProvider } from './context/User'
+import { Routes, Route } from "react-router-dom";
+import WelcomePage from './components/WelcomePage';
+import LoginPage from './components/LoginPage';
+import SignupPage from './components/SignupPage';
+import SideBar from './components/SideBar/';
+import Player from './components/Player';
+import Display from './components/Display';
+import { PlayerContext } from './context/PlayerContext';
+import { useContext } from 'react';
+import { UserData, UserProvider } from './context/User';
+import { CookiesProvider } from "react-cookie";
 export const url='http://localhost:4000'
-import { CookiesProvider } from 'react-cookie';
-
-
-
 const App = () => {
-  const location = useLocation()
-  
   const { audioRef, track, songsData } = useContext(PlayerContext);
-  const isAuthPage = location.pathname.includes("login") || location.pathname.includes("signup")
-
-
-  // useEffect(() => {
-  //   const navigationEntries = performance.getEntriesByType("navigation");
-  //   if (navigationEntries.length > 0 && navigationEntries[0].type === "reload") {
-  //     removeCookie("token", { path: "/" });
-  //     setIsAuth(false);
-  //     console.log("Page was reloaded!");
-  //   }
-  // }, []);
-  // If we're on an auth page, directly render the auth component
-  if (isAuthPage) {
-    return (
-      <CookiesProvider>
-      <UserProvider>
-      <div className="h-screen w-screen bg-gradient-to-b from-black to-[#121212]">
-        {location.pathname.includes("login") ? <LoginPage /> : <SignupPage />}
-      </div>
-      </UserProvider>
-      </CookiesProvider>
-    )
-  }
-
-  
+  const { isAuth } = UserData();
 
   return (
-    <>
     <CookiesProvider>
-    <UserProvider>
-      <div className='h-screen bg-black'>
-        {
-          songsData.lenght !== 0
-            ? <>
-              <div className='h-[90%] flex'>
+      <UserProvider>
+    <div className="h-screen w-screen bg-gradient-to-b from-black to-[#121212]">
+      <Routes>
+        <Route path="/" element={<WelcomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        {/* Protected route */}
+        <Route path="/*" element={
+          isAuth ? (
+            <>
+              <div className="h-[90%] flex">
                 <SideBar />
-                <Display />
+                <Display /> {/* <- Display has its own Routes inside */}
               </div>
               <Player />
+              <audio ref={audioRef} src={track ? track.file : ""} preload="auto"></audio>
             </>
-            : null
-        }
+          ) : (
+            <WelcomePage />
+          )
+        } />
+      </Routes>
+    </div>
+    </UserProvider>
+    </CookiesProvider>
+  );
+};
 
-        <audio ref={audioRef} src={track?track.file:" "} preload='auto'></audio>
-      </div>
-      </UserProvider>
-      </CookiesProvider>
-    </>
-  )
-}
-
-
-export default App
+export default App;

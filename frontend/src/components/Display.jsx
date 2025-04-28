@@ -10,6 +10,7 @@ import CreatePlaylistPage from './CreatePlaylist';
 import PlaylistsPage from './PlaylistsPage';
 import PlaylistDetailPage from './PlaylistDetailPage';
 import LikedSongsPage from './LikedSongsPage';
+import WelcomePage from './WelcomePage';
 
 
 
@@ -36,10 +37,12 @@ const Display = () => {
   return (
     <div ref={displayRef} className='w-[100%] m-2 px-6 pt-4 rounded bg-[#121212] text-white overflow-auto lg:w-[75%] lg:ml-0'>
       {albumsData.length > 0
-        ? <Routes>
-          <Route path='/' element={<DisplayHome />} />
-          <Route path='/login' element={<LoginPage />} />
+        ?
+        <Routes>
+          <Route path='/home' element={<DisplayHome />} />
+          {/* <Route path='/login' element={<LoginPage />} />
           <Route path='/signup' element={<SignupPage />} />
+          <Route path='/' element={<WelcomePage />} /> */}
           <Route path="/playlists" element={< PlaylistsPage/>} />
           <Route path="/likedSongs" element={< LikedSongsPage/>} />
           <Route path="/playlist/:id" element={<PlaylistDetailPage />} />
