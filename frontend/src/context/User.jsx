@@ -13,6 +13,19 @@ export const UserProvider = ({ children }) => {
   const [btnLoading, setBtnLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [cookies, setCookie , removeCookie] = useCookies(["token"]);
+  // useEffect(() => {
+  //   const navigationEntries = performance.getEntriesByType("navigation");
+  //   if (navigationEntries.length > 0 && navigationEntries[0].type === "reload") {
+  //     console.log("Page was reloaded!");
+  //     if (cookies.token) {
+  //       setIsAuth(true);
+  //     } else {
+  //       setIsAuth(false);
+  //     }
+  //     setLoading(false);
+      
+  //   }
+  // }, []);
 
   async function registerUser(
     firstName,
@@ -42,7 +55,14 @@ export const UserProvider = ({ children }) => {
     //   setBtnLoading(false);
     }
   }
-
+  useEffect(() => {
+    if (cookies.token) {
+      setIsAuth(true);
+    } else {
+      setIsAuth(false);
+    }
+    setLoading(false);
+  }, [cookies.token]);
   async function loginUser(email, password, navigate) {
      
 
@@ -109,6 +129,7 @@ export const UserProvider = ({ children }) => {
       toast.error(error.response.data.message);
     }
   }
+  
   
   useEffect(() => {
     fetchUser();

@@ -9,6 +9,7 @@ import SignupPage from './SignupPage';
 import CreatePlaylistPage from './CreatePlaylist';
 import PlaylistsPage from './PlaylistsPage';
 import PlaylistDetailPage from './PlaylistDetailPage';
+import LikedSongsPage from './LikedSongsPage';
 
 
 
@@ -40,6 +41,7 @@ const Display = () => {
           <Route path='/login' element={<LoginPage />} />
           <Route path='/signup' element={<SignupPage />} />
           <Route path="/playlists" element={< PlaylistsPage/>} />
+          <Route path="/likedSongs" element={< LikedSongsPage/>} />
           <Route path="/playlist/:id" element={<PlaylistDetailPage />} />
           <Route path='/create-playlist' element={<CreatePlaylistPage />} />
           <Route path='/album/:id' element={<DisplayAlbum album={albumsData.find((x) => (x._id == albumId))} />} />

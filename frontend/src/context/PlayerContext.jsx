@@ -153,6 +153,8 @@
 
 import { createContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
+import { useCookies } from "react-cookie";
+
 
 export const PlayerContext = createContext();
 
@@ -162,12 +164,16 @@ const PlayerContextProvider = (props) => {
   const seekBar = useRef();
   const volumeBg = useRef();
   const volumeBar = useRef();
+   const [cookies] = useCookies(["token"])
+
 
   const url = "http://localhost:4000"; // Ensure this is correct
 
   const [songsData, setSongsData] = useState([]);
   const [albumsData, setAlbumsData] = useState([]);
   const [track, setTrack] = useState(null);
+  const [likedSongsIds, setLikedSongsIds] = useState([]) // Store just the IDs of liked songs
+
   const [playStatus, setPlayStatus] = useState(false);
   const [volume, setVolume] = useState(1); // Default volume is 100%
   const [prevVolume, setPrevVolume] = useState(1); // Store previous volume for mute toggle
@@ -177,6 +183,52 @@ const PlayerContextProvider = (props) => {
     totalTime: { second: 0, minute: 0 },
   });
 
+
+
+  const fetchlikedSongDetails = async () => {
+    // setIsLoading(true)
+    try {
+      // Simulate API delay
+      console.log(cookies)
+              let token=cookies.token;
+              console.log(`${url}/api/likedSongs/liked`)
+              // Simulate API delay
+              // await new Promise((resolve) => setTimeout(resolve, 1000))
+              const response = await axios.get(`${url}/api/likedSongs/liked`, {
+                headers: {
+                  // 'Content-Type': 'multipart/form-data', // 🛠️ Important
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+              console.log(response.data.likedSongs);
+              // setLikedSongs(response.data.likedSongs);
+              if (response.data && response.data.likedSongs) {
+                // Extract just the song IDs from the response
+                const likedIds = response.data.likedSongs.map((song) => song._id || song.songId)
+                setLikedSongsIds(likedIds)
+              }
+
+      // Mock data - in a real app, this would come from your A
+
+    //   setPlaylist(response.data)
+    //   setTracks(response.data.songs)
+    } catch (error) {
+      console.error("Error fetching likedSongs details:", error)
+    }
+  }
+
+
+
+  const addLikedSong = (songId) => {
+    if (!likedSongsIds.includes(songId)) {
+      setLikedSongsIds((prev) => [...prev, songId])
+    }
+  }
+
+  // Remove a song from liked songs
+  const removeLikedSong = (songId) => {
+    setLikedSongsIds((prev) => prev.filter((id) => id !== songId))
+  }
   const play = () => {
     if (audioRef.current && track?.audio) {
       audioRef.current.play().catch((err) => console.error("Audio play error:", err));
@@ -341,9 +393,14 @@ const PlayerContextProvider = (props) => {
     toggleMute,
     songsData,
     albumsData,
+    likedSongsIds,
+    addLikedSong,
+    removeLikedSong,
+    fetchlikedSongDetails,
   };
 
   return (
+    
     <PlayerContext.Provider value={contextValue}>
       {props.children}
       {/* Add Hidden Audio Element */}

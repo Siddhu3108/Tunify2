@@ -9,6 +9,7 @@ import authRouter from './src/routes/authRoute.js'
 import playlistRouter from './src/routes/playlistRoute.js';
 import passport from "passport";
 import User from './src/models/userModel.js';
+import likedRouter from './src/routes/likedRoutes.js'
 
 //app config
 const app = express();
@@ -44,6 +45,7 @@ app.use('/api/song',songRouter);
 app.use('/api/album',albumRouter);
 app.use('/api/auth',authRouter);
 app.use('/api/playlist',playlistRouter);
+app.use('/api/likedSongs',likedRouter);
 
 app.get('/', (req,res)=>res.send("API Working"));
 

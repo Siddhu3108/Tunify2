@@ -1,6 +1,6 @@
 "use client"
 
-import { useContext, useState } from 'react'
+import { useContext, useState,useEffect } from 'react'
 import SideBar from './components/SideBar/'
 import Player from './components/Player'
 import Display from './components/Display'
@@ -14,11 +14,22 @@ export const url='http://localhost:4000'
 import { CookiesProvider } from 'react-cookie';
 
 
+
 const App = () => {
   const location = useLocation()
+  
   const { audioRef, track, songsData } = useContext(PlayerContext);
   const isAuthPage = location.pathname.includes("login") || location.pathname.includes("signup")
 
+
+  // useEffect(() => {
+  //   const navigationEntries = performance.getEntriesByType("navigation");
+  //   if (navigationEntries.length > 0 && navigationEntries[0].type === "reload") {
+  //     removeCookie("token", { path: "/" });
+  //     setIsAuth(false);
+  //     console.log("Page was reloaded!");
+  //   }
+  // }, []);
   // If we're on an auth page, directly render the auth component
   if (isAuthPage) {
     return (
