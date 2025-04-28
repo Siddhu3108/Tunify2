@@ -14,11 +14,6 @@ const SignupPage = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    birthDay: "",
-    birthMonth: "",
-    birthYear: "",
-    agreeTerms: false,
-    marketingConsent: false,
   })
   const [errors, setErrors] = useState({})
   const [showPassword, setShowPassword] = useState(false)
@@ -54,46 +49,16 @@ const SignupPage = () => {
     // Password validation
     if (!formData.password) {
       newErrors.password = "Password is required"
-    } else if (formData.password.length < 8) {
+    } else if (formData.password.length < 6) {
       newErrors.password = "Password must be at least 8 characters"
     }
 
     // Confirm password validation
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match"
-    }
-
     // Date of birth validation
-    if (!formData.birthDay || !formData.birthMonth || !formData.birthYear) {
-      newErrors.birthDate = "Date of birth is required"
-    } else {
-      // Check if user is at least 13 years old (common requirement for music services)
-      const birthDate = new Date(
-        Number.parseInt(formData.birthYear),
-        Number.parseInt(formData.birthMonth) - 1,
-        Number.parseInt(formData.birthDay),
-      )
-      const today = new Date()
-      const age = today.getFullYear() - birthDate.getFullYear()
-      const monthDiff = today.getMonth() - birthDate.getMonth()
-
-      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-        // Not yet had birthday this year
-        if (age - 1 < 13) {
-          newErrors.birthDate = "You must be at least 13 years old"
-        }
-      } else if (age < 13) {
-        newErrors.birthDate = "You must be at least 13 years old"
-      }
-    }
+    
 
     // Terms agreement validation
-    if (!formData.agreeTerms) {
-      newErrors.agreeTerms = "You must accept the terms and conditions"
-    }
-
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
+    
   }
 
   const handleChange = (e) => {
@@ -149,27 +114,7 @@ const SignupPage = () => {
   }
 
   // Generate month options
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ]
 
-  // Generate day options (1-31)
-  const days = Array.from({ length: 31 }, (_, i) => i + 1)
-
-  // Generate year options (current year - 100 to current year)
-  const currentYear = new Date().getFullYear()
-  const years = Array.from({ length: 100 }, (_, i) => currentYear - i)
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-black to-[#121212] flex flex-col items-center justify-center px-4 py-12">
@@ -323,127 +268,10 @@ const SignupPage = () => {
             </div>
 
             {/* Confirm Password Input */}
-            <div className="mb-6">
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-300 mb-2">
-                Confirm password
-              </label>
-              <input
-                type={showPassword ? "text" : "password"}
-                id="confirmPassword"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className={`block w-full px-4 py-3 bg-[#242424] border-none text-white rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none ${
-                  errors.confirmPassword ? "ring-1 ring-red-500" : ""
-                }`}
-                placeholder="••••••••"
-              />
-              {errors.confirmPassword && <p className="mt-2 text-sm text-red-500">{errors.confirmPassword}</p>}
-            </div>
+            
 
             {/* Date of Birth */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-300 mb-2">Date of birth</label>
-              <div className="grid grid-cols-3 gap-2">
-                <div>
-                  <select
-                    name="birthDay"
-                    value={formData.birthDay}
-                    onChange={handleChange}
-                    className="block w-full px-4 py-3 bg-[#242424] border-none text-white rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none"
-                  >
-                    <option value="">Day</option>
-                    {days.map((day) => (
-                      <option key={day} value={day}>
-                        {day}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <select
-                    name="birthMonth"
-                    value={formData.birthMonth}
-                    onChange={handleChange}
-                    className="block w-full px-4 py-3 bg-[#242424] border-none text-white rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none"
-                  >
-                    <option value="">Month</option>
-                    {months.map((month, index) => (
-                      <option key={month} value={index + 1}>
-                        {month}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <select
-                    name="birthYear"
-                    value={formData.birthYear}
-                    onChange={handleChange}
-                    className="block w-full px-4 py-3 bg-[#242424] border-none text-white rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none"
-                  >
-                    <option value="">Year</option>
-                    {years.map((year) => (
-                      <option key={year} value={year}>
-                        {year}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              {errors.birthDate && <p className="mt-2 text-sm text-red-500">{errors.birthDate}</p>}
-            </div>
-
-            {/* Terms and Conditions */}
-            <div className="mb-6">
-              <div className="flex items-start">
-                <div className="flex items-center h-5">
-                  <input
-                    id="agreeTerms"
-                    name="agreeTerms"
-                    type="checkbox"
-                    checked={formData.agreeTerms}
-                    onChange={handleChange}
-                    className="h-4 w-4 text-green-500 focus:ring-green-500 border-gray-600 rounded bg-gray-700"
-                  />
-                </div>
-                <div className="ml-3 text-sm">
-                  <label htmlFor="agreeTerms" className="text-gray-300">
-                    I agree to the{" "}
-                    <a href="#" className="text-green-500 hover:text-green-400">
-                      Terms of Service
-                    </a>{" "}
-                    and{" "}
-                    <a href="#" className="text-green-500 hover:text-green-400">
-                      Privacy Policy
-                    </a>
-                  </label>
-                </div>
-              </div>
-              {errors.agreeTerms && <p className="mt-2 text-sm text-red-500">{errors.agreeTerms}</p>}
-            </div>
-
-            {/* Marketing Consent */}
-            <div className="mb-6">
-              <div className="flex items-start">
-                <div className="flex items-center h-5">
-                  <input
-                    id="marketingConsent"
-                    name="marketingConsent"
-                    type="checkbox"
-                    checked={formData.marketingConsent}
-                    onChange={handleChange}
-                    className="h-4 w-4 text-green-500 focus:ring-green-500 border-gray-600 rounded bg-gray-700"
-                  />
-                </div>
-                <div className="ml-3 text-sm">
-                  <label htmlFor="marketingConsent" className="text-gray-300">
-                    I would like to receive marketing messages about Melodify products, services, and promotions
-                  </label>
-                </div>
-              </div>
-            </div>
-
+           
             {/* Submit Button */}
             <button
               type="submit"
