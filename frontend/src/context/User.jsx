@@ -9,6 +9,7 @@ const UserContext = createContext();
 export const UserProvider = ({ children }) => {
 //   const [user, setUser] = useState([]);
   const [isAuth, setIsAuth] = useState(false);
+  
   const [btnLoading, setBtnLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [cookies, setCookie , removeCookie] = useCookies(["token"]);
@@ -108,7 +109,7 @@ export const UserProvider = ({ children }) => {
       toast.error(error.response.data.message);
     }
   }
-
+  
   useEffect(() => {
     fetchUser();
   }, []);

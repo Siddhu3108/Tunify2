@@ -90,7 +90,7 @@ playlistRouter.get(
         // This concept is called req.params
         
         const playlistId = req.params.id;
-        console.log(playlistId)
+        // console.log(playlistId)
         // I need to find a playlist with the _id = playlistId
         const playlist = await playlistModel.findOne({_id: playlistId}).populate({
                 path:"songs",
@@ -102,4 +102,51 @@ playlistRouter.get(
         return res.status(200).json(playlist);
     }
 );
+
+
+playlistRouter.post(
+    "/addSong",
+    passport.authenticate("jwt", { session: false }),
+    upload.none(),
+    async (req, res) => {
+      try {
+        const currentUser = req.user;
+        const { playlistId, songId } = req.body;
+        console.log(req.body)
+        // Step 0: Get the playlist if valid
+        const playlist = await playlistModel.findOne({ _id: playlistId });
+        console.log(playlist)
+        if (!playlist) {
+          return res.status(404).json({ error: "Playlist does not exist" }); // ✅ 404 Not Found
+        }
+  
+        // Step 1: Check ownership
+        if (!playlist.owner.equals(currentUser._id)) {
+          return res.status(403).json({ error: "Not allowed" }); // ✅ 403 Forbidden
+        }
+  
+        // Step 2: Check if the song exists
+        const song = await songModel.findOne({ _id: songId });
+        if (!song) {
+          return res.status(404).json({ error: "Song does not exist" }); // ✅ 404 Not Found
+        }
+  
+        // Step 3: Check if song is already in the playlist
+        if (playlist.songs.includes(songId)) {
+          return res.status(409).json({ error: "Song already added to playlist" }); // ✅ 409 Conflict
+        }
+  
+        // Step 4: Add the song
+        playlist.songs.push(songId);
+        await playlist.save();
+  
+        return res.status(201).json({ success: true, message: "Song added successfully", playlist }); // ✅ 201 Created
+      } catch (error) {
+        console.error("Error adding song:", error);
+        return res.status(500).json({ error: error.message });
+      }
+    }
+  );
+  
+
 export default playlistRouter;

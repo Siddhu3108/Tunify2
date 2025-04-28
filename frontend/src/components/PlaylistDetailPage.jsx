@@ -78,7 +78,7 @@ const PlaylistDetailPage = () => {
           }))
 
         setPlaylist(response.data)
-        setTracks(mockTracks)
+        setTracks(response.data.songs)
         setEditForm({
           name: mockPlaylist.name,
           description: mockPlaylist.description,
@@ -237,12 +237,13 @@ const PlaylistDetailPage = () => {
               <h1 className="text-4xl font-bold mb-4">{playlist.name}</h1>
               <p className="text-gray-400 mb-2">{playlist.desc}</p>
               <div className="flex flex-wrap items-center gap-1 text-sm text-gray-400">
-                <span className="font-semibold text-white">{playlist.createdBy}</span>
+                
+                <span className="font-semibold text-white">{playlist.owner}</span>
                 <span>•</span>
-                <span>{playlist.trackCount} songs,</span>
-                <span>{playlist.duration}</span>
+                {/* <span>{playlist.trackCount} songs,</span>
+                <span>{playlist.duration}</span> */}
                 <span>•</span>
-                <span>Updated {formatDate(playlist.updatedAt)}</span>
+                {/* <span>Updated {formatDate(playlist.updatedAt)}</span> */}
               </div>
             </>
           )}
@@ -311,7 +312,7 @@ const PlaylistDetailPage = () => {
           <div
             key={track.id}
             className="grid grid-cols-[16px_1fr_1fr_minmax(120px,1fr)] gap-4 px-4 py-3 border-b border-[#2a2a2a] hover:bg-[#2a2a2a] group"
-            onClick={() => playWithId(track.id)}
+            onClick={() => playWithId(track._id)}
           >
             <div className="flex items-center justify-center text-gray-400 group-hover:text-white">
               <span className="group-hover:hidden">{index + 1}</span>
@@ -323,8 +324,8 @@ const PlaylistDetailPage = () => {
             </div>
             <div className="flex items-center gap-3 min-w-0">
               <div className="flex-1 min-w-0">
-                <div className="text-white font-medium truncate">{track.title}</div>
-                <div className="text-gray-400 text-sm truncate">{track.artist}</div>
+                <div className="text-white font-medium truncate">{track.name}</div>
+                <div className="text-gray-400 text-sm truncate">{track.desc}</div>
               </div>
             </div>
             <div className="flex items-center text-gray-400 truncate">{track.album}</div>
