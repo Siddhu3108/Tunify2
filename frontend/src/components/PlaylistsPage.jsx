@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { assets } from "../assets/frontend-assets/assets"
 import axios from "axios"
 import { url } from "../App"
 import { useCookies } from "react-cookie"
@@ -18,10 +17,10 @@ const PlaylistsPage = ({ vertical = false }) => {
     const fetchPlaylists = async () => {
       setIsLoading(true)
       try {
-        let token = cookies.token
+        const token = cookies.token
         const response = await axios.get(`${url}/api/playlist/myplaylists`, {
           headers: {
-            Authorization: `Bearer ${cookies.token}`,
+            Authorization: `Bearer ${token}`,
           },
         })
         setPlaylists(response.data.data)
@@ -42,48 +41,44 @@ const PlaylistsPage = ({ vertical = false }) => {
     return (
       <div className="space-y-2 pb-4">
         {isLoading ? (
-          Array(5).fill(0).map((_, index) => (
-            <div key={index} className="flex items-center gap-3 p-2 bg-[#181818] rounded animate-pulse">
-              <div className="w-12 h-12 bg-[#282828] rounded"></div>
-              <div className="flex-1">
-                <div className="h-4 bg-[#282828] rounded w-3/4 mb-2"></div>
-                <div className="h-3 bg-[#282828] rounded w-1/2"></div>
+          Array(5)
+            .fill(0)
+            .map((_, index) => (
+              <div key={index} className="flex items-center gap-3 p-2 bg-white/5 rounded-lg animate-pulse">
+                <div className="w-12 h-12 bg-white/10 rounded-lg"></div>
+                <div className="flex-1">
+                  <div className="h-4 bg-white/10 rounded w-3/4 mb-2"></div>
+                  <div className="h-3 bg-white/10 rounded w-1/2"></div>
+                </div>
               </div>
-            </div>
-          ))
+            ))
         ) : playlists.length > 0 ? (
           playlists.map((playlist) => (
             <div
               key={playlist._id}
-              className="flex items-center gap-3 p-2 bg-[#181818] rounded hover:bg-[#282828] transition-colors cursor-pointer"
+              className="flex items-center gap-3 p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
               onClick={() => navigate(`/playlist/${playlist._id}`)}
             >
               <img
                 src={playlist.image || "/placeholder.svg"}
                 alt={playlist.name}
-                className="w-12 h-12 object-cover rounded"
+                className="w-12 h-12 object-cover rounded-lg"
               />
               <div className="flex-1 min-w-0">
                 <h3 className="font-bold text-white text-sm truncate">{playlist.name}</h3>
-                <p className="text-gray-400 text-xs">Playlist • {playlist.songs.length} songs</p>
+                <p className="text-fuchsia-200/60 text-xs">Playlist • {playlist.songs.length} songs</p>
               </div>
             </div>
           ))
         ) : (
-          <div className="text-center py-4 text-gray-400 text-sm">
-            No playlists yet
-          </div>
+          <div className="text-center py-4 text-fuchsia-200/60 text-sm">No playlists yet</div>
         )}
       </div>
     )
   }
 
   // Default horizontal layout (if needed elsewhere)
-  return (
-    <div className="w-full">
-      {/* ... existing horizontal layout code ... */}
-    </div>
-  )
+  return <div className="w-full">{/* ... existing horizontal layout code ... */}</div>
 }
 
 export default PlaylistsPage

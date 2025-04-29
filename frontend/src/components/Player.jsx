@@ -1,191 +1,8 @@
-// // import { React, useContext } from 'react'
-// // import {assets} from '../assets/frontend-assets/assets'
-// // import { PlayerContext } from '../context/PlayerContext'
-
-// // const Player = () => {
-
-// //   const {track,seekBar,seekBg,playStatus,play,pause,time,previous,next,seekSong} = useContext(PlayerContext);
-
-// //   return track ? (
-// //     <div className='h-[10%] bg-black flex justify-between items-center text-white px-4'>
-// //         <div className='hidden lg:flex items-center gap-4'>
-// //             <img className='w-12' src={track.image} alt="" />
-// //             <div>
-// //                 <p>{track.name}</p>
-// //                 <p>{track.desc.slice(0,12)}</p>
-// //             </div>
-// //         </div>
-// //         <div className='flex flex-col items-center gap-1 m-auto'>
-// //             <div className='flex gap-4'>
-// //               <img className='w-4 cursor-pointer' src={assets.shuffle_icon} alt="" />
-// //               <img onClick={previous} className='w-4 cursor-pointer' src={assets.prev_icon} alt="" />
-// //               {playStatus
-// //               ?<img onClick={pause} className='w-4 cursor-pointer' src={assets.pause_icon} alt="" />
-// //               :<img onClick={play} className='w-4 cursor-pointer' src={assets.play_icon} alt="" />
-// //               }
-// //               <img onClick={next} className='w-4 cursor-pointer' src={assets.next_icon} alt="" />
-// //               <img className='w-4 cursor-pointer' src={assets.loop_icon} alt="" />
-// //             </div>
-// //             <div className='flex items-center gap-5'>
-// //               <p>{time.currentTime.minute}:{time.currentTime.second}</p>
-// //               <div ref={seekBg} onClick={seekSong} className='w-[60vw] max-w-[500px] bg-gray-300 rounded-full cursor-pointer'>
-// //                 <hr ref={seekBar} className='h-1 border-none w-0 bg-green-800 rounded-full' />
-// //               </div>
-// //               <p>{time.totalTime.minute}:{time.totalTime.second}</p>
-// //             </div>
-// //         </div>
-// //         <div className='hidden lg:flex items-center gap-2 opacity-75'>
-// //           <img className='w-4' src={assets.play_icon} alt="" />
-// //           <img className='w-4' src={assets.mic_icon} alt="" />
-// //           <img className='w-4' src={assets.queue_icon} alt="" />
-// //           <img className='w-4' src={assets.speaker_icon} alt="" />
-// //           <img className='w-4' src={assets.volume_icon} alt="" />
-// //           <div className='w-20 bg-slate-50 h-1 rounded'></div>
-// //           <img className='w-4' src={assets.mini_player_icon} alt="" />
-// //           <img className='w-4' src={assets.zoom_icon} alt="" />
-// //         </div>
-// //     </div>
-// //   ) : null
-// // }
-
-// // export default Player
-
-
-
-// "use client"
-
-// import { useContext } from "react"
-// import { assets } from "../assets/frontend-assets/assets"
-// import { PlayerContext } from "../context/PlayerContext"
-
-// const Player = () => {
-//   const {
-//     track,
-//     seekBar,
-//     seekBg,
-//     volumeBar,
-//     volumeBg,
-//     playStatus,
-//     play,
-//     pause,
-//     time,
-//     previous,
-//     next,
-//     seekSong,
-//     volume,
-//     isMuted,
-//     changeVolume,
-//     toggleMute,
-//   } = useContext(PlayerContext)
-
-//   // Function to get the appropriate volume icon based on volume level
-//   const getVolumeIcon = () => {
-//     if (isMuted || volume === 0) {
-//       return assets.volume_mute_icon || assets.volume_icon // Fallback if mute icon not available
-//     } else if (volume < 0.3) {
-//       return assets.volume_low_icon || assets.volume_icon // Fallback if low volume icon not available
-//     } else if (volume < 0.7) {
-//       return assets.volume_medium_icon || assets.volume_icon // Fallback if medium volume icon not available
-//     } else {
-//       return assets.volume_icon
-//     }
-//   }
-
-//   return track ? (
-//     <div className="h-[10%] bg-black flex justify-between items-center text-white px-4">
-//       <div className="hidden lg:flex items-center gap-4">
-//         <img className="w-12" src={track.image || "/placeholder.svg"} alt="" />
-//         <div>
-//           <p>{track.name}</p>
-//           <p>{track.desc.slice(0, 12)}</p>
-//         </div>
-//       </div>
-//       <div className="flex flex-col items-center gap-1 m-auto">
-//         <div className="flex gap-4">
-//           <img className="w-4 cursor-pointer" src={assets.shuffle_icon || "/placeholder.svg"} alt="" />
-//           <img onClick={previous} className="w-4 cursor-pointer" src={assets.prev_icon || "/placeholder.svg"} alt="" />
-//           {playStatus ? (
-//             <img onClick={pause} className="w-4 cursor-pointer" src={assets.pause_icon || "/placeholder.svg"} alt="" />
-//           ) : (
-//             <img onClick={play} className="w-4 cursor-pointer" src={assets.play_icon || "/placeholder.svg"} alt="" />
-//           )}
-//           <img onClick={next} className="w-4 cursor-pointer" src={assets.next_icon || "/placeholder.svg"} alt="" />
-//           <img className="w-4 cursor-pointer" src={assets.loop_icon || "/placeholder.svg"} alt="" />
-//         </div>
-//         <div className="flex items-center gap-5">
-//           <p>
-//             {time.currentTime.minute}:{time.currentTime.second}
-//           </p>
-//           <div
-//             ref={seekBg}
-//             onClick={seekSong}
-//             className="w-[60vw] max-w-[500px] h-1 bg-gray-600 rounded-full cursor-pointer group relative"
-//           >
-//             <div className="absolute inset-0 flex items-center">
-//               <hr
-//                 ref={seekBar}
-//                 className="h-1 border-none w-0 bg-green-500 rounded-full group-hover:bg-green-400 transition-colors"
-//               />
-//             </div>
-//             {/* Hover effect - dot that follows cursor */}
-//             <div
-//               className="absolute top-1/2 -translate-y-1/2 -right-1 h-3 w-3 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-//               style={{ right: `${100 - (seekBar.current?.style.width.replace("%", "") || 0)}%` }}
-//             ></div>
-//           </div>
-//           <p>
-//             {time.totalTime.minute}:{time.totalTime.second}
-//           </p>
-//         </div>
-//       </div>
-//       <div className="hidden lg:flex items-center gap-2 opacity-75">
-//         <img className="w-4" src={assets.play_icon || "/placeholder.svg"} alt="" />
-//         <img className="w-4" src={assets.mic_icon || "/placeholder.svg"} alt="" />
-//         <img className="w-4" src={assets.queue_icon || "/placeholder.svg"} alt="" />
-//         <img className="w-4" src={assets.speaker_icon || "/placeholder.svg"} alt="" />
-
-//         {/* Volume control section */}
-//         <div className="flex items-center gap-1">
-//           <img
-//             onClick={toggleMute}
-//             className="w-4 cursor-pointer"
-//             src={getVolumeIcon() || "/placeholder.svg"}
-//             alt="Volume"
-//           />
-//           <div
-//             ref={volumeBg}
-//             onClick={changeVolume}
-//             className="w-20 bg-gray-600 h-1 rounded-full cursor-pointer group relative"
-//           >
-//             <div className="absolute inset-0 flex items-center">
-//               <hr
-//                 ref={volumeBar}
-//                 className="h-1 border-none bg-white rounded-full group-hover:bg-green-400 transition-colors"
-//                 style={{ width: `${volume * 100}%` }}
-//               />
-//             </div>
-//             {/* Hover effect - dot that follows cursor */}
-//             <div
-//               className="absolute top-2/2 -translate-y-1/2 h-1 w-1 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-//               style={{ left: `${volume * 100}%`, transform: "translate(-50%, -50%)" }}
-//             ></div>
-//           </div>
-//         </div>
-
-//         <img className="w-4" src={assets.mini_player_icon || "/placeholder.svg"} alt="" />
-//         <img className="w-4" src={assets.zoom_icon || "/placeholder.svg"} alt="" />
-//       </div>
-//     </div>
-//   ) : null
-// }
-
-// export default Player
-
 "use client"
 
-import { useContext } from "react"
-import { assets } from "../assets/frontend-assets/assets"
+import { useContext, useState, useEffect } from "react"
 import { PlayerContext } from "../context/PlayerContext"
+import { Play, Pause, SkipBack, SkipForward, Shuffle, Repeat, Volume, Volume1, Volume2, VolumeX } from "lucide-react"
 
 const Player = () => {
   const {
@@ -207,93 +24,133 @@ const Player = () => {
     toggleMute,
   } = useContext(PlayerContext)
 
+  const [isHoveringSeek, setIsHoveringSeek] = useState(false)
+  const [isHoveringVolume, setIsHoveringVolume] = useState(false)
+
+  // Update seekbar width based on current time
+  useEffect(() => {
+    if (seekBar.current && time.currentTime && time.totalTime) {
+      const progress =
+        ((time.currentTime.minute * 60 + time.currentTime.second) /
+          (time.totalTime.minute * 60 + time.totalTime.second)) *
+        100
+      seekBar.current.style.width = `${progress}%`
+    }
+  }, [time, seekBar])
+
+  // Update volume bar width
+  useEffect(() => {
+    if (volumeBar.current) {
+      volumeBar.current.style.width = `${volume * 100}%`
+    }
+  }, [volume, volumeBar])
+
   const getVolumeIcon = () => {
     if (isMuted || volume === 0) {
-      return assets.volume_mute_icon || assets.volume_icon
+      return <VolumeX className="w-5 h-5" />
     } else if (volume < 0.3) {
-      return assets.volume_low_icon || assets.volume_icon
+      return <Volume className="w-5 h-5" />
     } else if (volume < 0.7) {
-      return assets.volume_medium_icon || assets.volume_icon
+      return <Volume1 className="w-5 h-5" />
     } else {
-      return assets.volume_icon
+      return <Volume2 className="w-5 h-5" />
     }
   }
 
   return track ? (
-    <div className="h-[10%] bg-black flex justify-between items-center text-white px-4">
+    <div className="h-[10%] bg-black/80 backdrop-blur-xl border-t border-white/5 flex justify-between items-center text-white px-4">
       <div className="hidden lg:flex items-center gap-4">
-        <img className="w-12" src={track.image || "/placeholder.svg"} alt="" />
+        <img className="w-12 h-12 rounded" src={track.image || "/placeholder.svg"} alt="" />
         <div>
-          <p>{track.name}</p>
-          <p>{track.desc.slice(0, 12)}</p>
+          <p className="text-white font-medium">{track.name}</p>
+          <p className="text-fuchsia-200/60 text-sm">{track.desc.slice(0, 20)}</p>
         </div>
       </div>
       <div className="flex flex-col items-center gap-1 m-auto">
-        <div className="flex gap-4">
-          <img className="w-4 cursor-pointer" src={assets.shuffle_icon || "/placeholder.svg"} alt="" />
-          <img onClick={previous} className="w-4 cursor-pointer" src={assets.prev_icon || "/placeholder.svg"} alt="" />
-          {playStatus ? (
-            <img onClick={pause} className="w-4 cursor-pointer" src={assets.pause_icon || "/placeholder.svg"} alt="" />
-          ) : (
-            <img onClick={play} className="w-4 cursor-pointer" src={assets.play_icon || "/placeholder.svg"} alt="" />
-          )}
-          <img onClick={next} className="w-4 cursor-pointer" src={assets.next_icon || "/placeholder.svg"} alt="" />
-          <img className="w-4 cursor-pointer" src={assets.loop_icon || "/placeholder.svg"} alt="" />
+        <div className="flex gap-4 items-center">
+          <button className="text-fuchsia-200/60 hover:text-fuchsia-200 transition-colors">
+            <Shuffle className="w-4 h-4" />
+          </button>
+          <button onClick={previous} className="text-fuchsia-200 hover:text-white transition-colors">
+            <SkipBack className="w-5 h-5" />
+          </button>
+          <button
+            onClick={playStatus ? pause : play}
+            className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-black hover:scale-105 transition-transform"
+          >
+            {playStatus ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
+          </button>
+          <button onClick={next} className="text-fuchsia-200 hover:text-white transition-colors">
+            <SkipForward className="w-5 h-5" />
+          </button>
+          <button className="text-fuchsia-200/60 hover:text-fuchsia-200 transition-colors">
+            <Repeat className="w-4 h-4" />
+          </button>
         </div>
-        <div className="flex items-center gap-5">
-          <p>
+        <div className="flex items-center gap-3">
+          <p className="text-xs text-fuchsia-200/60 w-10 text-right">
             {Math.floor(time.currentTime.minute) || 0}:
-            {String(Math.floor(time.currentTime.second) || 0).padStart(2, '0')}
+            {String(Math.floor(time.currentTime.second) || 0).padStart(2, "0")}
           </p>
           <div
             ref={seekBg}
             onClick={seekSong}
-            className="w-[60vw] max-w-[500px] h-1 bg-gray-600 rounded-full cursor-pointer group relative"
+            onMouseEnter={() => setIsHoveringSeek(true)}
+            onMouseLeave={() => setIsHoveringSeek(false)}
+            className="w-[60vw] max-w-[500px] h-1 bg-white/20 rounded-full cursor-pointer group relative"
           >
             <div className="absolute inset-0 flex items-center">
-              <hr
+              <div
                 ref={seekBar}
-                className="h-1 border-none w-0 bg-green-500 rounded-full group-hover:bg-green-400 transition-colors"
+                className="h-1 border-none bg-fuchsia-500 rounded-full group-hover:bg-fuchsia-400 transition-colors"
+                style={{ width: "0%" }} // Initial width, will be updated by useEffect
               />
             </div>
-            <div
-              className="absolute top-1/2 -translate-y-1/2 -right-1 h-3 w-3 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-              style={{ right: `${100 - (seekBar.current?.style.width.replace("%", "") || 0)}%` }}
-            ></div>
+            {isHoveringSeek && (
+              <div
+                className="absolute top-1/2 -translate-y-1/2 h-3 w-3 bg-white rounded-full transition-opacity"
+                style={{
+                  left: `${seekBar.current ? seekBar.current.style.width : "0%"}`,
+                  transform: "translate(-50%, -50%)",
+                }}
+              />
+            )}
           </div>
-          <p>
-            {Math.floor(time.totalTime.minute) || 0}:
-            {String(Math.floor(time.totalTime.second) || 0).padStart(2, '0')}
+          <p className="text-xs text-fuchsia-200/60 w-10">
+            {Math.floor(time.totalTime.minute) || 0}:{String(Math.floor(time.totalTime.second) || 0).padStart(2, "0")}
           </p>
         </div>
       </div>
-      <div className="hidden lg:flex items-center gap-2 opacity-75">
-        <div className="flex items-center gap-1">
-          <img
-            onClick={toggleMute}
-            className="w-4 cursor-pointer"
-            src={getVolumeIcon() || "/placeholder.svg"}
-            alt="Volume"
-          />
+      <div className="hidden lg:flex items-center gap-2">
+        <div className="flex items-center gap-2">
+          <button onClick={toggleMute} className="text-fuchsia-200/60 hover:text-fuchsia-200 transition-colors">
+            {getVolumeIcon()}
+          </button>
           <div
             ref={volumeBg}
             onClick={changeVolume}
-            className="w-20 bg-gray-600 h-1 rounded-full cursor-pointer group relative"
+            onMouseEnter={() => setIsHoveringVolume(true)}
+            onMouseLeave={() => setIsHoveringVolume(false)}
+            className="w-20 bg-white/20 h-1 rounded-full cursor-pointer group relative"
           >
             <div className="absolute inset-0 flex items-center">
-              <hr
+              <div
                 ref={volumeBar}
-                className="h-1 border-none bg-white rounded-full group-hover:bg-green-400 transition-colors"
+                className="h-1 border-none bg-fuchsia-500 rounded-full group-hover:bg-fuchsia-400 transition-colors"
                 style={{ width: `${volume * 100}%` }}
               />
             </div>
-            <div
-              className="absolute top-2/2 -translate-y-1/2 h-1 w-1 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-              style={{ left: `${volume * 100}%`, transform: "translate(-50%, -50%)" }}
-            ></div>
+            {isHoveringVolume && (
+              <div
+                className="absolute top-1/2 -translate-y-1/2 h-3 w-3 bg-white rounded-full transition-opacity"
+                style={{
+                  left: `${volume * 100}%`,
+                  transform: "translate(-50%, -50%)",
+                }}
+              />
+            )}
           </div>
         </div>
-
       </div>
     </div>
   ) : null

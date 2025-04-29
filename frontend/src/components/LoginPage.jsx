@@ -1,16 +1,17 @@
 "use client"
 
-import { useState, useEffect, createContext ,useContext} from "react"
+import { useState, useEffect, createContext, useRef } from "react"
 import { useNavigate, Link } from "react-router-dom"
-import { url } from "../App"
 import { toast } from "react-toastify"
 import { UserData } from "../context/User"
-// import {UserContext} from "./LoginPage"
-import axios from "axios"
-export const UserContext = createContext();
+import { Music, Eye, EyeOff, ArrowLeft, Loader2 } from "lucide-react"
+
+export const UserContext = createContext()
+
 const LoginPage = () => {
   const navigate = useNavigate()
-  const { isAuth,loginUser } = UserData();
+  const formRef = useRef(null)
+  const { isAuth, loginUser } = UserData()
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -19,7 +20,7 @@ const LoginPage = () => {
   const [errors, setErrors] = useState({})
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-//   const {isAuth, setIsAuth} = useContext(UserContext)
+  const [animationComplete, setAnimationComplete] = useState(false)
 
   // Animation states
   const [animateWave, setAnimateWave] = useState(false)
@@ -27,6 +28,20 @@ const LoginPage = () => {
   useEffect(() => {
     // Start animation after component mounts
     setAnimateWave(true)
+
+    // Animate form entrance
+    const form = formRef.current
+    if (form) {
+      form.style.opacity = "0"
+      form.style.transform = "translateY(20px)"
+
+      setTimeout(() => {
+        form.style.transition = "all 0.8s cubic-bezier(0.22, 1, 0.36, 1)"
+        form.style.opacity = "1"
+        form.style.transform = "translateY(0)"
+        setTimeout(() => setAnimationComplete(true), 800)
+      }, 300)
+    }
   }, [])
 
   const validateForm = () => {
@@ -73,87 +88,80 @@ const LoginPage = () => {
       setIsLoading(true)
 
       try {
-        await loginUser(formData.email,formData.password,navigate);
-        console.log(isAuth);
-        // const userData=new FormData();
-        // userData.append("email",formData.email);
-        // userData.append("password",formData.password);
-        // const response = await axios.post(`${url}/api/auth/login`, userData, {
-        //                 headers: {
-        //                     'Content-Type': 'application/json'
-        //                 }
-        //             });
-        
-        // console.log(response);
-        // // setIsAuth(true);
-        // // console.log(isAuth);
-        // if (response.data.success) {
-        //             toast.success("Album Added");
-                                
-        //         } else {
-        //             toast.error("Something went wrong");
-        //         }
-        
-        // // Success - navigate to home
-        
-        
-        // navigate("/")
-
-
-
+        await loginUser(formData.email, formData.password, navigate)
+        console.log(isAuth)
       } catch (error) {
-        console.error("Error Registration:", error);
-                toast.error("Error occurred");
+        console.error("Error during login:", error)
+        toast.error("Login failed. Please check your credentials.")
       } finally {
         setIsLoading(false)
       }
     }
-    
   }
-  
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black to-[#121212] flex flex-col items-center justify-center px-4 py-12">
-      {/* Audio wave animation */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-0 w-full h-full opacity-10">
+    <div className="min-h-screen bg-gradient-to-br from-violet-950 via-fuchsia-900 to-slate-900 flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Animated wave bars */}
+        <div className="absolute bottom-0 left-0 w-full h-1/3 opacity-20">
           <div className={`flex justify-around items-end h-full ${animateWave ? "animate-wave" : ""}`}>
-            {[...Array(20)].map((_, i) => (
+            {[...Array(24)].map((_, i) => (
               <div
                 key={i}
-                className="w-1 bg-green-500 rounded-t-full"
+                className="w-1.5 rounded-t-full bg-gradient-to-t from-fuchsia-400 to-violet-500"
                 style={{
-                  height: `${Math.random() * 60 + 10}%`,
-                  animationDelay: `${i * 0.1}s`,
-                  animationDuration: `${Math.random() * 2 + 1}s`,
+                  height: `${Math.random() * 70 + 30}%`,
+                  animationDelay: `${i * 0.08}s`,
+                  animationDuration: `${Math.random() * 1.5 + 1}s`,
                 }}
               ></div>
             ))}
           </div>
         </div>
+
+        {/* Decorative orbs */}
+        <div className="absolute top-1/4 -left-20 w-80 h-80 bg-fuchsia-600/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-violet-600/20 rounded-full blur-3xl"></div>
+      </div>
+
+      {/* Subtle grid overlay */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNjB2NjBIMHoiLz48cGF0aCBkPSJNNjAgMEgwdjYwaDYwVjB6TTMwIDMwaDMwVjBoLTMwdjMwek0wIDMwaDMwdjMwSDB2LTMweiIgZmlsbD0iI2ZmZmZmZjA1Ii8+PC9nPjwvc3ZnPg==')] opacity-10"></div>
+
+      {/* Back button */}
+      <div className="absolute top-6 left-6 z-20">
+        <button
+          onClick={() => navigate("/")}
+          className="flex items-center text-fuchsia-200/80 hover:text-white transition-colors group"
+        >
+          <ArrowLeft className="h-5 w-5 mr-2 transition-transform group-hover:-translate-x-1" />
+          <span>Back</span>
+        </button>
       </div>
 
       {/* Logo */}
-      <div className="mb-8 flex items-center justify-center">
-        <div className="bg-green-500 w-16 h-16 rounded-full flex items-center justify-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-10 w-10 text-black"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          >
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14.5c-2.49 0-4.5-2.01-4.5-4.5S9.51 7.5 12 7.5s4.5 2.01 4.5 4.5-2.01 4.5-4.5 4.5zm0-5.5c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z" />
-          </svg>
+      <div className="mb-8 flex items-center justify-center relative z-10">
+        <div className="relative">
+          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-fuchsia-500 to-violet-600 blur-lg opacity-70 animate-pulse"></div>
+          <div className="relative bg-gradient-to-tr from-fuchsia-600 to-violet-700 w-16 h-16 rounded-full flex items-center justify-center shadow-xl">
+            <Music className="h-8 w-8 text-white" strokeWidth={1.5} />
+          </div>
         </div>
-        <h1 className="text-3xl font-bold text-white ml-3">Tunify</h1>
+        <h1 className="text-3xl font-bold text-white ml-3 bg-clip-text bg-gradient-to-r from-white via-fuchsia-200 to-white animate-gradient-x">
+          Tunify
+        </h1>
       </div>
 
       {/* Login Form */}
-      <div className="w-full max-w-md bg-[#181818] rounded-xl shadow-2xl overflow-hidden">
+      <div
+        ref={formRef}
+        className="w-full max-w-md bg-black/20 backdrop-blur-xl rounded-2xl shadow-[0_10px_40px_rgba(134,25,143,0.15)] overflow-hidden border border-white/10 relative z-10"
+      >
         <div className="p-8">
           <h2 className="text-2xl font-bold text-white mb-6 text-center">Log in to continue</h2>
 
           {errors.general && (
-            <div className="bg-red-500 bg-opacity-20 border border-red-500 text-red-500 px-4 py-3 rounded mb-4">
+            <div className="bg-red-500/20 border border-red-500 text-red-200 px-4 py-3 rounded-lg mb-6 text-sm">
               {errors.general}
             </div>
           )}
@@ -161,151 +169,108 @@ const LoginPage = () => {
           <form onSubmit={handleSubmit}>
             {/* Email Input */}
             <div className="mb-6">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-fuchsia-100 mb-2">
                 Email address
               </label>
-              <div className={`relative rounded-md shadow-sm ${errors.email ? "ring-1 ring-red-500" : ""}`}>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className={`block w-full px-4 py-3 bg-[#242424] border-none text-white rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none ${
-                    errors.email ? "ring-1 ring-red-500" : ""
-                  }`}
-                  placeholder="name@example.com"
-                />
-              </div>
-              {errors.email && <p className="mt-2 text-sm text-red-500">{errors.email}</p>}
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className={`block w-full px-4 py-3 bg-white/5 border ${errors.email ? "border-red-500/50" : "border-fuchsia-500/20"} text-white rounded-lg focus:ring-2 focus:ring-fuchsia-500/50 focus:border-transparent focus:outline-none transition-colors`}
+                placeholder="name@example.com"
+              />
+              {errors.email && <p className="mt-2 text-sm text-red-400">{errors.email}</p>}
             </div>
 
             {/* Password Input */}
             <div className="mb-6">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-fuchsia-100 mb-2">
                 Password
               </label>
-              <div className={`relative rounded-md shadow-sm ${errors.password ? "ring-1 ring-red-500" : ""}`}>
+              <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
                   id="password"
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className={`block w-full px-4 py-3 bg-[#242424] border-none text-white rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none ${
-                    errors.password ? "ring-1 ring-red-500" : ""
-                  }`}
+                  className={`block w-full px-4 py-3 bg-white/5 border ${errors.password ? "border-red-500/50" : "border-fuchsia-500/20"} text-white rounded-lg focus:ring-2 focus:ring-fuchsia-500/50 focus:border-transparent focus:outline-none transition-colors`}
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-fuchsia-300/60 hover:text-fuchsia-200 transition-colors"
                 >
-                  {showPassword ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                      <path
-                        fillRule="evenodd"
-                        d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path
-                        fillRule="evenodd"
-                        d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z"
-                        clipRule="evenodd"
-                      />
-                      <path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.065 7 9.542 7 .847 0 1.669-.105 2.454-.303z" />
-                    </svg>
-                  )}
+                  {showPassword ? <Eye className="h-5 w-5" /> : <EyeOff className="h-5 w-5" />}
                 </button>
               </div>
-              {errors.password && <p className="mt-2 text-sm text-red-500">{errors.password}</p>}
+              {errors.password && <p className="mt-2 text-sm text-red-400">{errors.password}</p>}
             </div>
 
-            {/* Remember Me */}
-
             {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={isLoading}
-              className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-full shadow-sm text-sm font-medium text-black bg-green-500 hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors ${
-                isLoading ? "opacity-70 cursor-not-allowed" : ""
-              }`}
-            >
-              {isLoading ? (
-                <svg
-                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-black"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-              ) : null}
-              {isLoading ? "Logging in..." : "Log In"}
-            </button>
+            <div className="mt-8">
+              <button
+                type="submit"
+                disabled={isLoading}
+                className={`w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-medium text-black bg-gradient-to-r from-fuchsia-500 to-violet-500 hover:from-fuchsia-400 hover:to-violet-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-fuchsia-500 transition-all duration-300 ${
+                  isLoading ? "opacity-70 cursor-not-allowed" : "hover:scale-[1.02]"
+                }`}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="animate-spin h-5 w-5 mr-3 text-black" />
+                    <span>Logging in...</span>
+                  </>
+                ) : (
+                  <span>Log In</span>
+                )}
+              </button>
+            </div>
           </form>
-
-          {/* Divider */}
-          
-
-          {/* Social Login */}
-          
         </div>
 
         {/* Sign Up Section */}
-        <div className="px-8 py-6 bg-[#121212] border-t border-gray-800">
-          <p className="text-center text-sm text-gray-400">
+        <div className="px-8 py-6 bg-black/30 border-t border-white/5">
+          <p className="text-center text-sm text-fuchsia-200/70">
             Don't have an account?{" "}
-            <Link to="/signup" className="font-medium text-green-500 hover:text-green-400">
+            <Link to="/signup" className="font-medium text-fuchsia-400 hover:text-fuchsia-300 transition-colors">
               Sign up for free
             </Link>
           </p>
         </div>
       </div>
 
-      {/* Terms */}
-      <p className="mt-8 text-center text-xs text-gray-500">
-        By logging in, you agree to our{" "}
-        <a href="#" className="underline hover:text-gray-400">
-          Terms of Service
-        </a>{" "}
-        and{" "}
-        <a href="#" className="underline hover:text-gray-400">
-          Privacy Policy
-        </a>
-      </p>
-
       {/* Add this to your CSS or in a style tag */}
       <style jsx>{`
         @keyframes wave {
           0%, 100% {
-            height: 20%;
+            height: 30%;
           }
           50% {
-            height: 60%;
+            height: 70%;
           }
         }
+        
+        @keyframes gradient-x {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        
         .animate-wave div {
-          animation: wave 1.5s ease-in-out infinite;
+          animation: wave 2s ease-in-out infinite;
+        }
+        
+        .animate-gradient-x {
+          background-size: 200% auto;
+          animation: gradient-x 8s ease infinite;
         }
       `}</style>
     </div>
   )
-  return (
-    <UserContext.Provider value={isAuth}>
-      {/* Add Hidden Audio Element */}
-    </UserContext.Provider>
-  );
 }
 
 export default LoginPage
