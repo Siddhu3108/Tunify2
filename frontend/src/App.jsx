@@ -15,8 +15,8 @@ const App = () => {
   const { isAuth } = UserData();
 
   return (
-    <CookiesProvider>
-      <UserProvider>
+    // <CookiesProvider>
+    //   <UserProvider>
     <div className="h-screen w-screen bg-gradient-to-b from-black to-[#121212]">
       <Routes>
         <Route path="/" element={<WelcomePage />} />
@@ -39,8 +39,8 @@ const App = () => {
         } />
       </Routes>
     </div>
-    </UserProvider>
-    </CookiesProvider>
+    // </UserProvider>
+    // </CookiesProvider>
   );
 };
 

@@ -127,7 +127,7 @@ const CreatePlaylistPage = () => {
             }
 
         // Success - navigate to the new playlist (for now, just go to home)
-        navigate("/")
+        navigate("/home")
       } catch (error) {
         console.error("Error creating Playlist :", error);
             toast.error("Error occurred");

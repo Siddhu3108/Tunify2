@@ -26,6 +26,14 @@ export const UserProvider = ({ children }) => {
       
   //   }
   // }, []);
+  useEffect(() => {
+    // Whenever page loads, check if token exists
+    if (cookies.token) {
+      setIsAuth(true);
+    } else {
+      setIsAuth(false);
+    }
+  }, [cookies.token]); 
 
   async function registerUser(
     firstName,
@@ -97,7 +105,7 @@ export const UserProvider = ({ children }) => {
     try {
       const { data } = await axios.get("/api/user/me");
 
-      setUser(data);
+      // setUser(data);
       setIsAuth(true);
       setLoading(false);
     } catch (error) {
@@ -113,7 +121,7 @@ export const UserProvider = ({ children }) => {
       removeCookie("token", { path: "/" });
 
       setIsAuth(false);
-      window.location.reload();
+      navigate("/")
     } catch (error) {
       toast.error(error.response.data.message);
     }

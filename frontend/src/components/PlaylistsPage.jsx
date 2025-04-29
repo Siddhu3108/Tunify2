@@ -21,7 +21,7 @@ const PlaylistsPage = ({ vertical = false }) => {
         let token = cookies.token
         const response = await axios.get(`${url}/api/playlist/myplaylists`, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${cookies.token}`,
           },
         })
         setPlaylists(response.data.data)
